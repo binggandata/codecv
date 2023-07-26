@@ -30,7 +30,7 @@ const { queryCategory, data } = useCategory()
         <br />
         <br />
         <p>QQ 交流群</p>
-        <img src="@/assets/img/qqgroup.jpeg" alt="QQ交流群" class="qqgroup qr" />
+        <img src="@/assets/img/wechatmp.jpg" alt="微信公众号" class="qqgroup qr" />
       </div>
     </div>
   </div>

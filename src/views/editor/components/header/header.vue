@@ -24,7 +24,6 @@ const { open, toggle } = useSwitch()
     <nav-menu @export-md="exportFile('md')" @import-md="importFile" />
     <ExportTotal />
     <Reward />
-    <button class="exporter btn" @click="exportFile('dynamic')">导出PDF</button>
     <button class="exporter btn" @click="exportFile('native')">打印机导出PDF</button>
     <div class="operator">
       <el-tooltip content="给项目贡献代码" placement="bottom-end">

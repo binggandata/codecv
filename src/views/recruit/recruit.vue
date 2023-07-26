@@ -120,12 +120,12 @@ const { data, form, reset, pageNumChange } = useData()
       </div>
     </div>
     <div class="recruit-slide content-card" data-aos="fade-left">
-      <p class="mb-10">作者微信</p>
+      <p class="mb-10">1V1简历批改</p>
       <img src="@/assets/img/wechat.jpg" alt="联系方式" class="author qr" />
       <br />
       <br />
-      <p class="mb-10">QQ 交流群</p>
-      <img src="@/assets/img/qqgroup.jpeg" alt="QQ交流群" class="qqgroup qr" />
+      <p class="mb-10">微信公众号</p>
+      <img src="@/assets/img/wechatmp.jpg" alt="微信公众号" class="qqgroup qr" />
     </div>
   </div>
 </template>

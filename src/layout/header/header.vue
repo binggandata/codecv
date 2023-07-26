@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Logo from '@/components/logo.vue'
-import User from './components/user.vue'
 import Nav from './components/nav.vue'
 import NavMoblie from './components/navMoblie.vue'
 </script>
@@ -10,7 +9,6 @@ import NavMoblie from './components/navMoblie.vue'
     <div class="header">
       <Logo />
       <Nav />
-      <User />
     </div>
     <div class="header-800">
       <NavMoblie />

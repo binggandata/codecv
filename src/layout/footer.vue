@@ -6,14 +6,14 @@ import { wOpen } from '@/utils'
   <div id="footer">
     <span
       class="item mr-20 pointer"
-      @click="wOpen('https://github.com/acmenlei/markdown-resume-to-pdf')"
+      @click="wOpen('https://resume.bggg.tech')"
     >
       <i class="iconfont icon-github"></i>
-      Github地址
+      首页
     </span>
     <span class="item mr-20 pointer">
       <i class="iconfont icon-wechat"></i>
-      x972761675
+      binggandata
     </span>
   </div>
 </template>

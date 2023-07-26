@@ -5,11 +5,6 @@ const outNav = [
     tooltip: false
   },
   {
-    name: '高质量岗位',
-    path: '/recruit',
-    tooltip: false
-  },
-  {
     name: '语法助手',
     path: '/syntax/helper',
     tooltip: false
