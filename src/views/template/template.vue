@@ -20,16 +20,16 @@ const { queryCategory, data } = useCategory()
     </div>
     <div class="resume-right-container" data-aos="fade-left">
       <div class="resume-hot-rank content-card">
-        热门简历排行榜
-        <p>...</p>
-        <p>暂无...</p>
+        公告
+        <p>可关注下方公众号</p>
+        <p>获取更多求职面试技巧。</p>
       </div>
       <div class="advertising content-card mt-20">
-        <p>作者微信</p>
+        <p>1V1简历修改</p>
         <img src="@/assets/img/wechat.jpg" alt="relative" />
         <br />
         <br />
-        <p>QQ 交流群</p>
+        <p>微信公众号</p>
         <img src="@/assets/img/wechatmp.jpg" alt="微信公众号" class="qqgroup qr" />
       </div>
     </div>

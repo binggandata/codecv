@@ -6,10 +6,10 @@ import { wOpen } from '@/utils'
   <div id="footer">
     <span
       class="item mr-20 pointer"
-      @click="wOpen('https://resume.bggg.tech')"
+      @click="wOpen('https://github.com/acmenlei/codecv')"
     >
       <i class="iconfont icon-github"></i>
-      首页
+      原作者Github
     </span>
     <span class="item mr-20 pointer">
       <i class="iconfont icon-wechat"></i>
