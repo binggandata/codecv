@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { homeNav, homeOutNav } from '@/common/nav/homeNav'
+import { homeNav } from '@/common/nav/homeNav'
 import Logo from '@/components/logo.vue'
 import ThemeToggle from '@/components/themeToggle.vue'
 function toOutNav(path: string) {
@@ -15,10 +15,6 @@ function toOutNav(path: string) {
         <router-link v-if="!navItem.tooltip" :to="navItem.path || ''">{{
           navItem.name
         }}</router-link>
-      </li>
-      <li v-for="(navItem, idx) in homeOutNav" @click="toOutNav(navItem.path)" :key="idx">
-        <i :class="navItem.icon" :style="{ color: navItem.color }" />
-        {{ navItem.name }}
       </li>
     </ul>
     <div class="operator" data-aos="zoom-out-left">

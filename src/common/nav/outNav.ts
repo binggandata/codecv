@@ -4,11 +4,6 @@ const outNav = [
     path: '/template',
     tooltip: false
   },
-  // {
-  //   name: '求职社区',
-  //   path: '/community',
-  //   tooltip: false
-  // },
   {
     name: '高质量岗位',
     path: '/recruit',
