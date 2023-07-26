@@ -4,11 +4,6 @@ const homeNav = [
     path: '/template',
     tooltip: false
   },
-  // {
-  //   name: '求职社区',
-  //   path: '/community',
-  //   tooltip: false
-  // },
   {
     name: '语法助手',
     path: '/syntax/helper',
@@ -20,6 +15,4 @@ const homeNav = [
     tooltip: false
   }
 ]
-
-
 export { homeNav }
