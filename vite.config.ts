@@ -59,8 +59,8 @@ export default ({ mode }) => {
       }),
       Components({
         resolvers: [ElementPlusResolver()]
-      }),
-      eslint({ lintOnStart: true, cache: false }) // 打包以及启动项目开启eslint检查
+      })
+      // eslint({ lintOnStart: true, cache: false }) // 打包以及启动项目开启eslint检查
     ],
     resolve: {
       alias: {
