@@ -5,13 +5,8 @@ const outNav = [
     tooltip: false
   },
   {
-    name: '语法助手',
+    name: '使用说明',
     path: '/syntax/helper',
-    tooltip: false
-  },
-  {
-    name: '更新内容',
-    path: '/update/line',
     tooltip: false
   }
 ]
