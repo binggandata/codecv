@@ -6,6 +6,7 @@ export default `<h2 style="background:var(--background); color: var(--font-color
 <span style="line-height: 28px; color: var(--font-color)"
   >如何利用好本工具，轻松制作简历？</span
 >
+<a target="null" href="http://ai.bggg.tech/resume">此外，你也可以使用AI工具，免费获得简历修改建议。</a>
 </p>
 
 <h2 style="background:var(--background); color: var(--font-color); margin: 20px 0 10px 0;">

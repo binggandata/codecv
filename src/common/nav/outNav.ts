@@ -8,6 +8,11 @@ const outNav = [
     name: '使用说明',
     path: '/syntax/helper',
     tooltip: false
+  },
+  {
+    name: 'AI简历修改建议',
+    path: 'http://ai.bggg.tech/resume',
+    tooltip: false
   }
 ]
 
