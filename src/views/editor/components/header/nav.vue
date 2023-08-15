@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import nav from '@/common/nav/nav'
+import { refreshGuide } from '../guide/guide'
 
-defineEmits(['export-md', 'import-md'])
+defineEmits(['export-md', 'import-md', 'export-picture'])
 </script>
 
 <template>
@@ -24,7 +25,10 @@ defineEmits(['export-md', 'import-md'])
                     @change="$emit('import-md', $event)"
                   />
                 </label>
-                <span v-else @click="$emit('export-md')">{{ subNavItem }}</span>
+                <span v-else-if="subNavItem.includes('导出MD')" @click="$emit('export-md')">{{
+                  subNavItem
+                }}</span>
+                <span v-else @click="$emit('export-picture')">{{ subNavItem }}</span>
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -35,6 +39,7 @@ defineEmits(['export-md', 'import-md'])
         <router-link :to="navItem.path || ''">{{ navItem.name }}</router-link>
       </template>
     </li>
+    <li class="use-guide" @click="refreshGuide()">开启引导</li>
   </ul>
 </template>
 

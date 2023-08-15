@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Tabbar from '../tabbar/tabbar.vue'
+import TabBar from '../tabbar/tabbar.vue'
+// import AI from '../ai/ai.vue'
 import { useRenderHTML, useResumeType } from '../../hook'
 import { useThemeConfig } from '@/common/global'
 import { step, pageSize } from '../tabbar/hook'
@@ -8,13 +9,12 @@ defineEmits(['upload-avatar', 'html-convert'])
 
 const { resumeType } = useResumeType()
 const { isDark } = useThemeConfig()
-const { renderDOM, editorStore } = useRenderHTML(resumeType)
+const { renderDOM } = useRenderHTML(resumeType)
 </script>
 
 <template>
   <div class="outer" :style="{ background: isDark ? '#282c34' : 'var(--bg-theme)' }">
-    <Tabbar
-      @toggle-editor-mode="editorStore.setWritableMode(renderDOM)"
+    <TabBar
       @html-convert="cnt => $emit('html-convert', cnt)"
       @upload-avatar="path => $emit('upload-avatar', path)"
     />
@@ -28,6 +28,7 @@ const { renderDOM, editorStore } = useRenderHTML(resumeType)
         })`
       }"
     ></div>
+    <!-- <AI /> -->
   </div>
 </template>
 

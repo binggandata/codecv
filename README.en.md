@@ -14,7 +14,7 @@ This is a tool for creating resumes using `markdown`. It can convert your writte
 
 ## 🤩 Preview of the result
 
-<p>Resume template and default theme</p>
+<p>Resume template</p>
 
 <img style="max-width: 1000px" src="./docs/templates.webp" alt="模板" />
 
@@ -45,10 +45,6 @@ This is a tool for creating resumes using `markdown`. It can convert your writte
 **Q**: Why does the export fail?
 
 **A**: At present, the service is deployed on the `Netlify Serverless` service, because it is a foreign server, access is easy to error, please try several times, of course, you can also use the local export `PDF` replacement.
-
-## 👋 CONTRIBUTING
-
-Please read before contributing[Contribution Guide](./CONTRIBUTING.md)
 
 ## 🙏 Sponsor
 

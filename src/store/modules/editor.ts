@@ -11,7 +11,7 @@ const MARKDOWN_CONTENT = 'markdown-content'
 const WRITABLE = 'writable'
 
 export const getCurrentTypeContent = (type: string): string => {
-  for (const template of templates) {
+  for (const template of templates.value) {
     if (type === template.type) {
       return template.content
     }
@@ -22,6 +22,7 @@ export const getCurrentTypeContent = (type: string): string => {
 const useEditorStore = defineStore('editorStore', {
   state: () => ({
     MDContent: '',
+    nativeContent: '',
     writable: Boolean(getLocalStorage(WRITABLE)) || false
   }),
   actions: {
@@ -52,6 +53,12 @@ const useEditorStore = defineStore('editorStore', {
           DOMTree && (DOMTree.innerHTML = originHTML.innerHTML)
         })
       }
+    },
+    setNativeContent(content: string) {
+      this.nativeContent = content
+    },
+    resetNativeContent() {
+      this.nativeContent = ''
     }
   }
 })

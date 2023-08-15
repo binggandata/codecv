@@ -11,19 +11,24 @@ const edit = (type: string) => {
 </script>
 
 <template>
-  <div class="resume-card" @click="edit(theme.type)" data-aos="zoom-in">
-    <img :src="theme.img" loading="lazy" />
-    <div class="resume-card-mask">
-      <button class="btn center pointer">使用模板</button>
+  <div class="resume-card" data-aos="zoom-in">
+    <p class="template-hot" v-show="theme.hot">
+      <i class="iconfont icon-hot font-20"></i> {{ theme.hot }}
+    </p>
+    <div @click="edit(theme.type)">
+      <img :src="theme.img" loading="lazy" />
+      <div class="resume-card-mask">
+        <button class="btn center pointer">使用模板</button>
+      </div>
+      {{ theme.name }}
     </div>
-    {{ theme.name }}
   </div>
 </template>
 
 <style lang="scss" scoped>
 .resume-card {
   box-shadow: 0 0 40px var(--body-background);
-  margin: 0 20px 55px 0;
+  margin: 5px 20px 80px 0;
   width: 185px;
   height: 240px;
   position: relative;
@@ -31,6 +36,18 @@ const edit = (type: string) => {
   transition: transform 0.4s;
   color: var(--font-color);
   cursor: pointer;
+
+  .template-hot {
+    height: 25px;
+    background: var(--background);
+    font-size: 12px;
+    top: -25px;
+    position: absolute;
+    text-align: left;
+    i {
+      color: orangered;
+    }
+  }
 
   img {
     width: 100%;
@@ -41,7 +58,7 @@ const edit = (type: string) => {
   .resume-card-mask {
     border-radius: 5px;
     position: absolute;
-    height: 100%;
+    height: calc(100% + 25px);
     width: 100%;
     top: 0;
     left: 0;
@@ -49,6 +66,7 @@ const edit = (type: string) => {
     background: rgba(0, 0, 0, 0.5);
 
     button {
+      border-radius: 3px;
       color: white;
       background: var(--theme);
     }

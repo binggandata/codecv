@@ -1,11 +1,11 @@
-import { onActivated, Ref, ref, watch } from 'vue'
+import { onActivated, onDeactivated, Ref, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useThrottleFn } from '@vueuse/core'
+import { useDebounceFn, useThrottleFn } from '@vueuse/core'
 
 import { getLocalStorage } from '@/common/localstorage'
 import { errorMessage, successMessage, warningMessage } from '@/common/message'
-import { importCSS, isDev, useLoading } from '@/utils'
-import { splitPage } from './components/tabbar/hook'
+import { download, downloadOfBuffer, importCSS, isDev, queryDOM, useLoading } from '@/utils'
+import { ensureEmptyPreWhiteSpace, splitPage } from './components/tabbar/hook'
 import useEditorStore from '@/store/modules/editor'
 import { convertDOM } from '@/utils/moduleCombine'
 import { resumeExport } from '@/api/modules/resume'
@@ -55,8 +55,7 @@ export function useRenderHTML(resumeType: Ref<string>) {
     }
   )
   return {
-    renderDOM,
-    editorStore
+    renderDOM
   }
 }
 
@@ -76,12 +75,13 @@ export function useDownLoad(type: Ref<string>) {
   const router = useRouter(),
     editorStore = useEditorStore(),
     { showLoading, closeLoading } = useLoading()
-
-  const downloadDynamic = async (fileName: string) => {
-    const html = document.querySelector('.jufe') as HTMLElement
-    const resumeBgColor = `html,body { background: ${getComputedStyle(html).getPropertyValue(
+  // 导出前处理PDF中的样式
+  const exportPreHandler = async () => {
+    const html = queryDOM('.jufe') as HTMLElement,
+      htmlStyles = getComputedStyle(html)
+    const resumeBgColor = `html,body { background: ${htmlStyles.getPropertyValue(
       'background'
-    )}; }`
+    )}; font-size:${htmlStyles.getPropertyValue('font-size')}; }`
     const resetStyle = ` * { margin: 0; padding: 0; box-sizing: border-box; }`
     // 获取简历模板的样式
     let style = '',
@@ -100,39 +100,46 @@ export function useDownLoad(type: Ref<string>) {
       style += styleContent
     }
     style = resetStyle + resumeBgColor + style
-    showLoading('因使用国外服务速度稍慢 请耐心等待...')
+    return { style, link: linkURL, content: html }
+  }
+  // 导出PDF & 图片
+  const downloadDynamic = async (isPDF: boolean, fileName?: string) => {
+    const { content: html, style, link } = await exportPreHandler()
+    const content = html.cloneNode(true) as HTMLElement
+    !isPDF && ensureEmptyPreWhiteSpace(content)
+    showLoading('正在导出请耐心等待...')
     try {
-      const pdfData = await resumeExport({ content: html.outerHTML, style, link: linkURL })
-      const blob = new Blob([new Uint8Array(pdfData.pdf.data)], { type: 'application/pdf' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${fileName}.pdf`
-      a.click()
-      URL.revokeObjectURL(url)
+      const pdfData = await resumeExport({
+        content: content.outerHTML,
+        style,
+        link,
+        name: type.value,
+        type: isPDF ? 0 : 1
+      })
+      const buffer = isPDF ? pdfData.pdf.data : pdfData.picture.data
+      const _fileName = (fileName || document.title) + (isPDF ? '.pdf' : '.png')
+      const fileType = 'application/' + isPDF ? 'pdf' : 'png'
+      downloadOfBuffer(buffer, _fileName, fileType)
       successMessage('导出成功～')
     } catch (e: any) {
       const errorMsg =
         e.message == 'Failed to fetch'
-          ? '国内导出易出错 请重新尝试 有条件的打开梯子后重试或使用打印机导出'
-          : '导出出错 请先尝试其他方式'
+          ? '国内导出易出错 请重新尝试 有条件的打开梯子后重试或使用备用导出'
+          : '导出出错 请先尝试备用导出方案'
       errorMessage(errorMsg)
     }
     closeLoading()
   }
 
   const downloadNative = () => {
-    localStorage.setItem('download', JSON.stringify(convertDOM(editorStore.MDContent).innerHTML))
+    editorStore.setNativeContent((<HTMLElement>queryDOM('.jufe')).innerHTML)
     router.push({ path: '/download', query: { type: type.value } })
   }
 
   const downloadMD = () => {
     const blob = new Blob([editorStore.MDContent])
     const url = URL.createObjectURL(blob)
-    const aTag = document.createElement('a')
-    aTag.download = document.title + '.md'
-    aTag.href = url
-    aTag.click()
+    download(url, document.title + '.md')
     URL.revokeObjectURL(url)
     successMessage('导出成功~')
   }
@@ -192,4 +199,29 @@ export const clickedTarget = ref<HTMLElement | null>()
 
 export function ensureResetClickedTarget() {
   clickedTarget.value = null
+}
+
+// 备用导出按钮
+export function useShowExport() {
+  const showExport = ref(false)
+
+  function setShowExport() {
+    const scrollTop = document.body.getBoundingClientRect().top
+    if (Math.abs(scrollTop) > 50 && window.innerWidth > 600) {
+      showExport.value = true
+    } else {
+      showExport.value = false
+    }
+  }
+
+  onActivated(() => {
+    document.addEventListener('scroll', useDebounceFn(setShowExport, 400))
+  })
+
+  onDeactivated(() => {
+    document.removeEventListener('scroll', setShowExport)
+  })
+  return {
+    showExport
+  }
 }

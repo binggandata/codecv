@@ -8,6 +8,30 @@ export async function importCSS(name: string) {
   return res.default
 }
 
+export function download(url: string, fileName: string) {
+  const a = document.createElement('a')
+  a.download = fileName
+  a.href = url
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+export function downloadOfBuffer(buffer: Iterable<number>, fileName: string, type: string) {
+  const blob = new Blob([new Uint8Array(buffer)], { type })
+  const url = URL.createObjectURL(blob)
+  download(url, fileName)
+  URL.revokeObjectURL(url)
+}
+
+export function createText(text: string) {
+  return document.createTextNode(text)
+}
+
+export function queryDOM(uni: string) {
+  return document.querySelector(uni)
+}
+
 export function createStyle() {
   return document.createElement('style')
 }

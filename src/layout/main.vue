@@ -12,13 +12,13 @@ import Footer from './footer.vue'
     <router-view v-slot="{ Component }">
       <keep-alive
         :max="10"
-        include="editor,syntax,recruit,template,update,community,communityEditor,communityDetail"
+        include="home,editor,syntax,recruit,template,update,community,communityEditor,communityDetail"
       >
         <component :is="Component" />
       </keep-alive>
     </router-view>
   </div>
-  <Footer v-if="!['/home', '/editor'].includes($route.path)" />
+  <Footer v-if="!['/editor'].includes($route.path)" />
 </template>
 
 <style lang="scss" scoped>

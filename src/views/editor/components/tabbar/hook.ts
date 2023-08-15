@@ -1,6 +1,11 @@
 import { getLocalStorage, removeLocalStorage, setLocalStorage } from '@/common/localstorage'
 import { createStyle, query, removeHeadStyle, convert, createDIV } from '@/utils'
-import { getPrimaryBGColor, getPrimaryColor } from '@/templates/config'
+import {
+  getFontFamily,
+  getLineHeight,
+  getPrimaryBGColor,
+  getPrimaryColor
+} from '@/templates/config'
 import { onActivated, onMounted, reactive, ref } from 'vue'
 import { warningMessage } from '@/common/message'
 
@@ -160,9 +165,15 @@ export function useCustomFont(resumeType: string) {
     {
       value: 'Noto Sans SC',
       label: 'Noto Sans SC'
+    },
+    {
+      value: 'Nunito',
+      label: 'Nunito(英文)'
     }
   ]
-  const font = ref(get(cacheKey) ? (get(cacheKey) as string) : fontOptions[0].value)
+  const font = ref(
+    get(cacheKey) ? (get(cacheKey) as string) : getFontFamily(resumeType) || fontOptions[0].value
+  )
 
   function setFont(fontFamily: string | null, first?: boolean) {
     let style = query(cacheKey)
@@ -172,7 +183,7 @@ export function useCustomFont(resumeType: string) {
       style.setAttribute(cacheKey, 'true')
     }
 
-    style.textContent = `.jufe * { font-family: ${fontFamily}, 'Noto Serif SC', 'Noto Sans SC', sans-serif, serif; }`
+    style.textContent = `.jufe * { font-family: ${fontFamily}, 'Noto Sans SC', 'Noto Serif SC', 'Nunito', sans-serif, serif; }`
     !isAppend && document.head.appendChild(style)
     set(cacheKey, fontFamily)
     const renderCV = queryRenderCV()
@@ -215,8 +226,8 @@ export function useAdjust(resumeType: string) {
     className: string
   }
 
-  function getMarginValues(element: HTMLElement): IElementProperty[] {
-    const marginValues: IElementProperty[] = []
+  function getProperties(element: HTMLElement): IElementProperty[] {
+    const curProperties: IElementProperty[] = []
     const seenTags = new Set<string>() // 用于记录已经处理过的标签名
     const seenClassNames = new Set<string>() // 用于记录已经处理过的类名
 
@@ -224,14 +235,14 @@ export function useAdjust(resumeType: string) {
       if (el !== element) {
         const computedStyle = window.getComputedStyle(el) // 获取计算后的样式
         const marginTop = parseInt(computedStyle.marginTop) // 获取 marginTop 值
-        const marginBottom = parseInt(computedStyle.marginBottom) // 获取行高
+        const marginBottom = parseInt(computedStyle.marginBottom)
         const tagName = el.tagName.toLowerCase() // 获取标签名，转换为小写
         const className = el.className.split(' ')[0] || '' // 获取类名，如果没有则用 'No Class' 代替
         const name = convert(className || tagName)
 
         // 判断标签名和类名是否已经处理过，如果没有，则将其加入结果数组，并添加到 seenTags 和 seenClassNames 集合中
         if (!seenTags.has(tagName) || !seenClassNames.has(className)) {
-          marginValues.push({ tagName, name, marginBottom, marginTop, className })
+          curProperties.push({ tagName, name, marginBottom, marginTop, className })
           seenTags.add(tagName)
           seenClassNames.add(className)
         }
@@ -242,16 +253,16 @@ export function useAdjust(resumeType: string) {
     }
 
     helper(element) // 调用递归函数开始获取 marginTop 和 lineHeight 值
-    return marginValues
+    return curProperties
   }
 
   function adjustMargin() {
     setVisible()
     // 获取dom元素
     const targetElement = queryRenderCV()
-    const marginValues = getMarginValues(targetElement)
+    const curProperties = getProperties(targetElement)
     properties.length = 0
-    properties.push(...marginValues)
+    properties.push(...curProperties)
   }
 
   function confirmAdjustment() {
@@ -266,7 +277,7 @@ export function useAdjust(resumeType: string) {
     }
     for (const property of properties) {
       const target = property.className ? `.${property.className}` : property.tagName
-      cssText += `.jufe ${target} {margin-top: ${property.marginTop}px!important; margin-bottom: ${property.marginBottom}px!important; }`
+      cssText += `.jufe ${target} {margin-top: ${property.marginTop}px!important; margin-bottom: ${property.marginBottom}px!important;}`
     }
     styleDOM.textContent = cssText
     priorityInsert(isAppend, styleDOM)
@@ -315,7 +326,7 @@ export function useAdjust(resumeType: string) {
 // 调整行高
 export function useLineHeight(resumeType: string) {
   const cacheKey = LINE_HEIGHT + '-' + resumeType
-  const h = ref(get(cacheKey) ? parseInt(get(cacheKey) as string) : 25)
+  const h = ref(get(cacheKey) ? +(get(cacheKey) as string) : +getLineHeight(resumeType))
   const lineHeightOptions = Array(30)
     .fill(0)
     .map((item, idx) => ({
@@ -543,7 +554,7 @@ export function useAutoOnePage(resumeType: string) {
         warningMessage('你的内容有点太少了！压缩成一页的话不太美观哦，再填写一点内容吧～')
         return
       }
-      const { differenceConfig, map } = useInitMarginTop(renderCV)
+      const { differenceConfig, map } = getInitMarginTop(renderCV)
       useOnePageCSSContent(differenceConfig, difference, map, cacheKey, resumeType)
     } else {
       removeHeadStyle(cacheKey)
@@ -560,7 +571,7 @@ export function useAutoOnePage(resumeType: string) {
   }
 }
 
-function useInitMarginTop(container: HTMLElement) {
+function getInitMarginTop(container: HTMLElement) {
   const titles = Array.from(container.querySelectorAll('h1,h2,h3,h4,h5,h6,li,p')),
     differenceConfig: priorityDefineItem[] = []
   const visited = new Set(),
